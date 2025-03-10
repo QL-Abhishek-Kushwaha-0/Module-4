@@ -1,0 +1,197 @@
+﻿# .NET Web API
+	-----------------------------------------------------------------
+	-> Framework for building RESTful APIs using .NET Core
+	-> Allows Communication betweeen Client Application (React, Angular, mobile Apps etc) and a backend server using HTTP Requests.
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+# Project Structure of .NET Web API
+		📂 MyWebAPI
+			│-- 📂 Controllers
+			│   ├── ProductController.cs
+			│   ├── UserController.cs
+			│-- 📂 Models
+			│   ├── Product.cs
+			│   ├── User.cs
+			│-- 📂 Data
+			│   ├── AppDbContext.cs
+			│-- 📂 Repositories
+			│   ├── IProductRepository.cs
+			│   ├── ProductRepository.cs
+			│-- 📂 Services
+			│   ├── IProductService.cs
+			│   ├── ProductService.cs
+			│-- 📂 DTOs
+			│   ├── ProductDTO.cs
+			│-- 📂 Middleware
+			│   ├── ExceptionMiddleware.cs
+			│-- 📂 Configurations
+			│   ├── AppSettings.json
+			│-- 📂 Properties
+			│-- 📂 wwwroot
+			│-- Program.cs
+			│-- appsettings.json
+			│-- MyWebAPI.csproj
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+	1. Controllers [Handles API Requests]
+		--------------------------------------------------------------------------------------------------------------
+			-> Handles HTTP Requests and sends Resopnses.
+			-> They call Services to handle Business logic.
+
+			-> Maps HTTP Request to methods.
+			-> Uses [HttpGet], [HttpPost] decorators for routing.
+			-> Returns HTTP responses
+
+	2. Models [Define Database Schema]
+		-------------------------------------------------------------------------------------------------------------
+			-> Models define how data is structured in the database.
+
+			-> Inside Models Create a folder as 'Entities'
+					-> Entities Folder will contain the data models
+					-> Eg : Employee.cs
+
+			-> We will create a connection String in the appsettings.json folder as 'DefaultConnection'
+					-> "ConnectionStrings": {
+							"DefaultConnection": "Server=LAPTOP-CL6D9R3S\\SQLEXPRESS;Database=EmployeesDB;Trusted_Connection=True;TrustServerCertificate=True"
+						}
+
+			-> After that we will inject DbContext class in Program.cs to use it
+					->	builder.Services.AddDbContext<ApplicationDbContext>(
+							options => options.UseSqlServer(
+								builder.Configuration.GetConnectionString(
+									"DefaultConnection"
+								)
+							)
+					    );
+
+			-> After that we will need to add Migratioin to create Database abd tables
+					-> For this we will open the NuGet Package Manager Console and run two commands
+							1. add-migration "Message"
+							2. update-database
+							
+			-> Represents a database table
+			-> Each Property is a table column
+
+	3. Data [Database Context (DbContext)]
+		---------------------------------------------------------------------------------------------------------
+			-> The DbContext class manages database operations using Entity Framework Core.
+
+			-> Handles Database Queries and Migrations.
+
+	4. Repositories [Data Access Layer (DAL)]
+		-------------------------------------------------------------------------------------------------------
+			-> Repositories encapsulate database Queries, keeping controllers and Service clean.
+
+			-> Interface => IProductRepository.cs (Contains Methods related to Products)
+
+			-> Implementation => ProductRepository.cs (Implements the IProductRepository Interface)
+
+			-> Manages Database Queries (SELECT, INSERT)
+			-> Keeps logic seperate from controllers.
+
+	5. Services [Business Logic Layer]
+		------------------------------------------------------------------------------------------------------
+			-> Services implement business rules and call repositories
+
+			-> Interface => IProductService.cs
+
+			-> Implementation => ProductService.cs
+
+			-> Seperates Business Logic from Controllers
+			-> Calls repository for database operations
+
+	6. DTOs [Data Transfer Objects]
+		---------------------------------------------------------------------------------------------------------
+			-> These prevent exposing database models directly.
+
+			-> Protects database schema from direct exposure.
+
+	7. Middleware [Global Exception Handling]
+		-----------------------------------------------------------------------------------------------------------
+			-> Middlewares intercept requests before they reach controllers
+
+			-> Handles all unhandles exceptions globally
+
+	8. Configurations [apsettings.json]
+		-----------------------------------------------------------------------------------------------------------
+			-> Stores database connection strings and app settings
+
+			-> Stores Environment-specific configurations
+
+	9. Program.cs [Entry Point]
+		-----------------------------------------------------------------------------------------------------------
+			-> Registers Services, repositories and middleware.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	✅ Controllers → Handle HTTP requests
+	✅ Models → Define database schema
+	✅ Repositories → Handle database queries
+	✅ Services → Implement business logic	
+	✅ Middleware → Global error handling
+	✅ DTOs → Secure API response data	
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Migrations in .NET
+	-----------------------------------------------------------------------------------
+		-> A Part of Entity-Framework Core
+		-> Helps in version-controlling database schema changes
+		-> Generates C# Classes that define how to update or revert changes to database schema.
+
+		-> Key Features : 
+			----------------
+				1. Tracks changes in DbContext and Entity Models.
+				2. Generates SQL Scripts to update the database
+				3. Supports downgrading and upgrading schema versions.
+				4. Helps automate schema synchronization in different environments.
+
+		-> In Order to Set Up Migrations, Install Entity Framework Core Tools
+
+		-> Creating and Applying Migrations
+			------------------------------------
+				1. Define your Model and DbContext
+					--------------------------------
+					-> Define Your Entity Class
+							public class Product
+							{
+								public int Id { get; set; }
+								public string Name { get; set; }
+								public decimal Price { get; set; }
+							}
+
+				2. Add the First Migration
+					-> Add-Migration InitialCreate
+							* This creates a Migrations folder containing:
+									yyyyMMddHHmmss_InitialCreate.cs: Defines the schema changes.
+									AppDbContextModelSnapshot.cs: Represents the latest schema state.
+
+				
+				3. Apply the Migration to the Database
+					-> Update-Database  :- This Applies the Migration and Creates Table in the Database
+
+				4. Adding New Changes
+					-> Whenever you modify your entity models, generates a new migration
+
+				5. Rolling Back to Previous Migration
+					-> If a Migration has already been applied and you want to rollback 
+							-> Command : Update-Database name_of_migration_message
+
+					-> Removing the last Migration
+							-> Remove-Migration
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+# Seeding in .NET Core
+	--------------------------------
+	1. Database Seeding
+		------------------
+			-> Process of pre-populating the database with initial or test data.
+			-> Useful in Scenarios like :
+					* Creating default users, roles or categories
+					* Ensuring Test Environments have consistent data.
+					* Setting up reference tables
+					* Simplifying development without requiring manual data entry.
+							
