@@ -1,6 +1,7 @@
 ﻿using DemoWebAPI.DTO;
 using DemoWebAPI.Models.Entities;
 using DemoWebAPI.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoWebAPI.Services
 {
@@ -13,16 +14,17 @@ namespace DemoWebAPI.Services
             _EmployeeRepository = employeeRepository;
         }
 
-        public List<Employee> GetAllEmployees()
+        public async Task<List<Employee>> GetAllEmployees()
         {
-            return _EmployeeRepository.GetAllEmployees();
-        }
-        public Employee? GetEmployeeById(Guid id)
-        {
-            return _EmployeeRepository.GetEmployeeById(id);
+            return await _EmployeeRepository.GetAllEmployees();
         }
 
-        public Employee AddEmployee(AddEmployeeDto Employee)
+        public async Task<Employee?> GetEmployeeById(Guid id)    // Task<T> is nullable
+        {
+            return await _EmployeeRepository.GetEmployeeById(id);
+        }
+
+        public async Task<Employee?> AddEmployee(AddEmployeeDto Employee)
         {
             var EmployeeEntity = new Employee()
             {
@@ -31,25 +33,25 @@ namespace DemoWebAPI.Services
                 Phone = Employee.Phone,
                 Salary = Employee.Salary,
             };
-            return _EmployeeRepository.AddEmployee(EmployeeEntity);
+            return await _EmployeeRepository.AddEmployee(EmployeeEntity);
         }
 
-        public bool UpdateEmployee(Guid id, UpdateEmployeeDto UpdatedEmployee)
+        public async Task<bool> UpdateEmployee(Guid id, UpdateEmployeeDto UpdatedEmployee)
         {
-            var Employee = _EmployeeRepository.GetEmployeeById(id);
+            var Employee = await _EmployeeRepository.GetEmployeeById(id);
 
             if (Employee == null) return false;
 
-            return _EmployeeRepository.UpdateEmployee(Employee, UpdatedEmployee);
+            return await _EmployeeRepository.UpdateEmployee(Employee, UpdatedEmployee);
         }
 
-        public bool DeleteEmployee(Guid id)
+        public async Task<bool> DeleteEmployee(Guid id)
         {
-            var Employee = _EmployeeRepository.GetEmployeeById(id);
+            var Employee = await _EmployeeRepository.GetEmployeeById(id);
 
             if (Employee is null) return false;
 
-            return _EmployeeRepository.DeleteEmployee(Employee);
+            return await _EmployeeRepository.DeleteEmployee(Employee);
         }
     }
 }

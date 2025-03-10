@@ -1,6 +1,7 @@
 ﻿using DemoWebAPI.Data;
 using DemoWebAPI.DTO;
 using DemoWebAPI.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoWebAPI.Repositories
 {
@@ -12,36 +13,36 @@ namespace DemoWebAPI.Repositories
             _DbContext = DbContext;
         }
 
-        public List<Employee> GetAllEmployees() => _DbContext.Employees.ToList();
+        public async Task<List<Employee>> GetAllEmployees() => await _DbContext.Employees.ToListAsync();
 
-        public Employee GetEmployeeById(Guid id)
+        public async Task<Employee> GetEmployeeById(Guid id)
         {
-            return _DbContext.Employees.Find(id);
+            return await _DbContext.Employees.FindAsync(id);
         }
 
-        public Employee AddEmployee(Employee employee)
+        public async Task<Employee> AddEmployee(Employee employee)
         {
-            _DbContext.Employees.Add(employee);
-            _DbContext.SaveChanges();  // Required to Save Changes to the database
+            await _DbContext.Employees.AddAsync(employee);
+            await _DbContext.SaveChangesAsync();  // Required to Save Changes to the database
             return employee;
         }
 
-        public bool UpdateEmployee(Employee employee, UpdateEmployeeDto UpdatedEmployee)
+        public async Task<bool> UpdateEmployee(Employee employee, UpdateEmployeeDto UpdatedEmployee)
         {
             employee.Name = UpdatedEmployee.Name ?? employee.Name;
             employee.Email = UpdatedEmployee.Email ?? employee.Email;
             employee.Phone = UpdatedEmployee.Phone ?? employee.Phone;
             employee.Salary = UpdatedEmployee.Salary;
 
-            _DbContext.SaveChanges();
+            await _DbContext.SaveChangesAsync();
             return true;
         }
 
-        public bool DeleteEmployee(Employee employee)
+        public async Task<bool> DeleteEmployee(Employee employee)
         {
-            _DbContext.Employees.Remove(employee);
+            _DbContext.Employees.Remove(employee);  // No need to use await with Remove as it does not returnn any valuess
 
-            _DbContext.SaveChanges();
+            await _DbContext.SaveChangesAsync();
 
             return true;
         }

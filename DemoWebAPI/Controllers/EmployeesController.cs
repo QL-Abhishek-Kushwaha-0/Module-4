@@ -23,9 +23,9 @@ namespace DemoWebAPI.Controllers
 
         // API path to GET Details of ALl Employees
         [HttpGet]
-        public IActionResult GetAllEmployees()
+        public async Task<IActionResult> GetAllEmployees()
         {
-            var AllEmployees = _EmployeeServices.GetAllEmployees();
+            var AllEmployees = await _EmployeeServices.GetAllEmployees();
 
             return Ok(AllEmployees);
         }
@@ -34,9 +34,9 @@ namespace DemoWebAPI.Controllers
         // API Path to Get Details of Single Employee by ID
         [HttpGet]
         [Route("{id:guid}")]
-        public IActionResult GetEmployeeByID(Guid id)
+        public async Task<IActionResult> GetEmployeeByID(Guid id)
         {
-            var Employee = _EmployeeServices.GetEmployeeById(id);
+            var Employee = await _EmployeeServices.GetEmployeeById(id);
             
             if (Employee == null) return NotFound("No User with this ID Exists!!!!");
 
@@ -46,9 +46,9 @@ namespace DemoWebAPI.Controllers
 
         // API Path to Add Employee
         [HttpPost]
-        public IActionResult AddEmployee([FromBody] AddEmployeeDto Employee)
+        public async Task<IActionResult> AddEmployee([FromBody] AddEmployeeDto Employee)
         {
-            var EmployeeEntity = _EmployeeServices.AddEmployee(Employee);
+            var EmployeeEntity = await _EmployeeServices.AddEmployee(Employee);
 
             return Ok(EmployeeEntity);
         }
@@ -57,9 +57,9 @@ namespace DemoWebAPI.Controllers
         // API Path to update the details of the Employee
         [HttpPut]
         [Route("{id:guid}")]
-        public IActionResult UpdateEmployee(Guid id, UpdateEmployeeDto UpdatedEmployee)
+        public async Task<IActionResult> UpdateEmployee(Guid id, UpdateEmployeeDto UpdatedEmployee)
         {
-            var updateStatus = _EmployeeServices.UpdateEmployee(id, UpdatedEmployee);
+            var updateStatus = await _EmployeeServices.UpdateEmployee(id, UpdatedEmployee);
 
             if (updateStatus == false) return NotFound("User with this ID Does Not Exists!!!!");
 
@@ -70,9 +70,9 @@ namespace DemoWebAPI.Controllers
         // API Path to Delete the Employee
         [HttpDelete]
         [Route("{id:guid}")]
-        public IActionResult DeleteEmployee(Guid id)
+        public async Task<IActionResult> DeleteEmployee(Guid id)
         {
-            var deleteStatus = _EmployeeServices.DeleteEmployee(id);
+            var deleteStatus = await _EmployeeServices.DeleteEmployee(id);
 
             if (deleteStatus == false) return NotFound("No Such User Exists!!!!!");
 

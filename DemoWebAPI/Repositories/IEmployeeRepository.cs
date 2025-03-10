@@ -5,10 +5,10 @@ namespace DemoWebAPI.Repositories
 {
     public interface IEmployeeRepository
     {
-        List<Employee> GetAllEmployees();
-        Employee GetEmployeeById(Guid id);
-        Employee AddEmployee(Employee Employee);
-        bool UpdateEmployee(Employee employee, UpdateEmployeeDto UpdatedEmployee);
-        bool DeleteEmployee(Employee employee);
+        Task<List<Employee>> GetAllEmployees();
+        Task<Employee> GetEmployeeById(Guid id);
+        Task<Employee> AddEmployee(Employee Employee);
+        Task<bool> UpdateEmployee(Employee employee, UpdateEmployeeDto UpdatedEmployee);
+        Task<bool> DeleteEmployee(Employee employee);
     }
 }

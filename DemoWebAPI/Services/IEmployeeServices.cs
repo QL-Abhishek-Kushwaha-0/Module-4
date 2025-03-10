@@ -5,13 +5,13 @@ namespace DemoWebAPI.Services
 {
     public interface IEmployeeServices
     {
-        List<Employee> GetAllEmployees();
-        Employee? GetEmployeeById(Guid id);
+        Task<List<Employee>> GetAllEmployees();
+        Task<Employee?> GetEmployeeById(Guid id);
 
-        Employee AddEmployee(AddEmployeeDto Employee);
+        Task<Employee> AddEmployee(AddEmployeeDto Employee);
 
-        bool UpdateEmployee(Guid id, UpdateEmployeeDto UpdatedEmployee);
+        Task<bool> UpdateEmployee(Guid id, UpdateEmployeeDto UpdatedEmployee);
 
-        bool DeleteEmployee(Guid id);
+        Task<bool> DeleteEmployee(Guid id);
     }
 }
