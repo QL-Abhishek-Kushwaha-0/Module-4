@@ -33,7 +33,7 @@ namespace DemoWebAPI.Controllers
 
         // API Path to Get Details of Single Employee by ID
         [HttpGet]
-        [Route("{id:guid}")]
+        [Route("getempdetails/{id:guid}")]
         public async Task<IActionResult> GetEmployeeByID(Guid id)
         {
             var Employee = await _EmployeeServices.GetEmployeeById(id);
@@ -46,6 +46,7 @@ namespace DemoWebAPI.Controllers
 
         // API Path to Add Employee
         [HttpPost]
+        [Route("add")]
         public async Task<IActionResult> AddEmployee([FromBody] AddEmployeeDto Employee)
         {
             var EmployeeEntity = await _EmployeeServices.AddEmployee(Employee);
@@ -56,10 +57,10 @@ namespace DemoWebAPI.Controllers
 
         // API Path to update the details of the Employee
         [HttpPut]
-        [Route("{id:guid}")]
+        [Route("update/{id:guid}")]
         public async Task<IActionResult> UpdateEmployee(Guid id, UpdateEmployeeDto UpdatedEmployee)
         {
-            var updateStatus = await _EmployeeServices.UpdateEmployee(id, UpdatedEmployee);
+            bool updateStatus = await _EmployeeServices.UpdateEmployee(id, UpdatedEmployee);
 
             if (updateStatus == false) return NotFound("User with this ID Does Not Exists!!!!");
 
@@ -69,7 +70,7 @@ namespace DemoWebAPI.Controllers
 
         // API Path to Delete the Employee
         [HttpDelete]
-        [Route("{id:guid}")]
+        [Route("delete/{id:guid}")]
         public async Task<IActionResult> DeleteEmployee(Guid id)
         {
             var deleteStatus = await _EmployeeServices.DeleteEmployee(id);
